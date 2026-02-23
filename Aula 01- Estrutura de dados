@@ -40,3 +40,60 @@ public int consultar (int indice){
         return -1;
     }
 }
+//Buscar posição de um valor
+public int buscar(int valor){
+    for(int i=0; i< tamanho; i++){
+        if(elementos[i]==valor){
+            return i;
+        }
+    }
+    return -1;
+}
+
+//Exibir vetor 
+public void exibir(){
+    for(int i=0; i<tamanho; i++){
+        System.out.print(elementos[i]+"");
+    }
+    Sytem.out.println();
+   }
+   
+ }//da classe
+ public static void main(String[]args){
+     
+     Vetor v= new Vetor(5);
+     
+     v.iserir(10);
+     v.iserir(20);
+     v.iserir(30);
+     v.iserir(40);
+     
+     v.exibir();//10,20,30,40
+     
+     v.remover(1);//remove o 20
+     v.exibir();//10,30,40
+     
+     System.out.println(v.consultar(1));//30
+     
+     int pos=v.buscar(40);
+     System.out.println("Valor 40 está na posição :" + pos);
+   }
+}
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+}
