@@ -1,0 +1,42 @@
+public class Vetor{
+    private int[] elementos;
+    private int tamanho;
+}
+//Construtor
+public Vetor (int capacidade)
+elementos = new int[capacidade];
+tamanho=0;
+}
+//Iserir elemento final
+public void inserir(int valor){
+    if(tamanho < elementos.length){
+        elementos[tamanho]=valor;
+        tamanho++;
+    } else{
+        System.out.println("Vetor cheio!");
+    }
+}
+//Remover elemento pelo indice
+public void remover(int indice){
+    if (indice >=0 && indice < tamanho){
+        for (int i=indice; i<tamanho -1; i++){
+            elementos[i]= elementos[i+1];
+            
+        }
+    }
+    
+    tamanho--;
+  }else{
+    System.out.println("índice invalido!");
+  }
+}
+
+//Consultar o valor pelo indice 
+public int consultar (int indice){
+    if(indice>=0 && indice<tamanho){
+        return elementos[indice];
+    }else{
+        System.out.println("Indice invalido");
+        return -1;
+    }
+}
