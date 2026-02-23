@@ -1,9 +1,8 @@
-public class Vetor{
+public class vetor{
     private int[] elementos;
     private int tamanho;
-}
 //Construtor
-public Vetor (int capacidade)
+public vetor (int capacidade){
 elementos = new int[capacidade];
 tamanho=0;
 }
@@ -23,7 +22,6 @@ public void remover(int indice){
             elementos[i]= elementos[i+1];
             
         }
-    }
     
     tamanho--;
   }else{
@@ -55,18 +53,16 @@ public void exibir(){
     for(int i=0; i<tamanho; i++){
         System.out.print(elementos[i]+"");
     }
-    Sytem.out.println();
+    System.out.println();
    }
-   
- }//da classe
- public static void main(String[]args){
+   public static void main(String[]args){
      
-     Vetor v= new Vetor(5);
+     vetor v = new vetor(5);
      
-     v.iserir(10);
-     v.iserir(20);
-     v.iserir(30);
-     v.iserir(40);
+     v.inserir(10);
+     v.inserir(20);
+     v.inserir(30);
+     v.inserir(40);
      
      v.exibir();//10,20,30,40
      
