@@ -79,21 +79,3 @@ public void exibir(){
      System.out.println("Valor 40 está na posição :" + pos);
    }
 }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    }
-}
