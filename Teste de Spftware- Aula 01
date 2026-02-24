@@ -1,0 +1,44 @@
+public class ValidadorSenha {
+  public static boolean isSenhaValida(String senha)
+  {
+      if(senha==null)
+      {
+          return false;
+      }
+      int tamanho = senha.length();
+      if(tamanho<8 || tamanho >12)
+     {
+         return false;
+        }
+        boolean temMaiuscula= false;
+        boolean temNumero= false;
+        
+        for (char c : senha.toCharArray())
+        {
+            if(Character.isUpperCase(c))
+               {
+                   temMaiuscula = true;
+               }
+            if (Character.isDigit(c))
+              {
+                  temNumero=true;
+              }
+        }//do for
+
+        return temMaiuscula && temNumero;
+    }
+    public static void main(String[]args)
+    {
+    String[]senhas= {"Senha123",  //valida
+                      "abc", //invalida:muito curta
+                      "senhasemnumero", //invalida,sem numero
+                      "12345678", //invalida,sem letra
+                      "Teste2025" //valida
+                    };
+    for (String senha:senhas)
+    {
+    System.out.printf("Senha '%s' é %s%n",senha,isSenhaValida(senha)? "VÁLIDA": "INVÁLIDA");
+    }
+}
+}
+  
