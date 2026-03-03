@@ -1,0 +1,41 @@
+algoritmo "BFS"
+var 
+grafo, visitados, fila, objetivo, s, vizinhos, n: string i: inteiro
+inicio
+    grafo = {
+    "A": ["B","C"],
+    "B": ["D","E","F"],
+    "C": ["G"],
+    "D": [],
+    "E": [],
+    "F": ["H"],
+    "G": ["I"],
+    "H": [],
+    "I": ["J"],
+    "J": []
+    }
+    visitados =[]
+    fila = ["A"]
+    objetivo = "H"
+
+    enquanto(tamanho(fila)>0) faca 
+    s = fila.pop (0)
+    escreva(s)
+    visitados.adicionar(s)
+    se (s==objetivo) entao
+    escreva(s)
+    fila =[]
+     interrompa 
+    fim_se 
+    vizinhos = grafo.pegar(s, [])
+    para i de 0 ate (tamanho(vizinhos) -1) faça 
+    n= vizinhos[i]
+        escreva (i)
+ 
+        se visitados.count(n) = 0 entao
+          visitados.adicionar(n)
+          fila.adicionar(n)
+        fim_se
+      fim_para
+    fim_enquanto
+fim_algoritmo
