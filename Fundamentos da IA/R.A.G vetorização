@@ -1,0 +1,33 @@
+# Objetivo: Entender as duas funções primordiais de um LLM: gerar texto ( chat ) egerar vetores ( embed )
+import cohere
+ from google.colab import userdata
+ api_key = userdata.get('Anna')
+ co = cohere.Client(api_key)
+
+ def kata_1_basico():
+    resposta_chat = co.chat(
+        model='c4ai-aya-expanse-32b',
+        message="Explique o que é RAG em uma frase curta."
+    )
+    print(f"LLM: {resposta_chat.text}")
+
+    print("--- 2. Testando Embeddings ---")
+
+    textos = [
+        "A Univille São Bento do Sul.", "O céu é azul."
+        ]
+
+    # input_type é obrigatório na v3. 'search_document' paraa base de dados.
+    resposta_embed = co.embed(
+        model="embed-multilingual-v3.0",
+        texts=textos,
+        input_type="classification"
+    )
+
+    print(
+        f"Primeiros 5 números do vetor:\n"
+        f"{resposta_embed.embeddings[0][:5]}"
+
+        )
+
+kata_1_basico()
