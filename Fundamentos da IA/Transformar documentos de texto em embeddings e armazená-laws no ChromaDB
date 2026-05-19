@@ -1,0 +1,42 @@
+!pip install chromadb
+import chromadb
+import cohere
+from google.colab import userdata
+
+api_key = userdata.get('Anna')
+co = cohere.Client(api_key)
+
+def kata_2_banco_vetorial():
+ # Inicializa o ChromaDB em memória
+ chroma_client = chromadb.Client()
+
+ # Cria uma coleção (tabela)
+ nome_colecao = "manuais_empresa"
+
+ # Limpa se já existir (útil no Colab)
+ try: chroma_client.delete_collection(nome_colecao)
+ except: pass
+
+ colecao = chroma_client.create_collection(name=nome_colecao)
+
+ documentos = [
+ "A política de reembolso permite devoluções em até 30dias.",
+ "O nome do CEO da empresa é Bentão",
+ "O horário de suporte é de segunda a sexta, das 9h às18h."
+ ]
+ ids = ["doc1", "doc2", "doc3"]
+
+ print("Vetorizando documentos...")
+ resposta_embed = co.embed(texts=documentos, model="embed-multilingual-v3.0", input_type="search_document")
+
+ print("Armazenando no ChromaDB...")
+ colecao.add(
+ documents=documentos,
+ embeddings=resposta_embed.embeddings,
+ ids=ids
+ )
+ print(f"{colecao.count()} documentos armazenados com sucesso!")
+
+ return colecao
+# Executa e guarda a coleção para o próximo Kata
+minha_colecao = kata_2_banco_vetorial()
