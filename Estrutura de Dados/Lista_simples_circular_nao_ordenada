@@ -1,0 +1,184 @@
+package com.mycompany.lista_simples_circular_nao_ordenada;
+
+import javax.swing.JOptionPane;
+
+/**
+ * Lista Simplesmente Encadeada Circular Não Ordenada
+ */
+public class Lista_simples_circular_nao_ordenada {
+
+    // ─── Nó ───────────────────────────────────────────────────────────────────
+    class no {
+        int inteiro;
+        no prox;
+    }
+
+    // ─── Lista ────────────────────────────────────────────────────────────────
+    class lista {
+        private no ini = null;
+        private no fim = null;
+
+        // Retorna a quantidade de elementos na lista
+        private int qtdeElementos() {
+            if (ini == null) return 0;
+
+            int cont = 0;
+            no temp = ini;
+            do {
+                cont++;
+                temp = temp.prox;
+            } while (temp != ini);   // percorre até voltar ao início
+
+            return cont;
+        }
+
+        // ── Inserir no fim ────────────────────────────────────────────────────
+        public void push() {
+            String entrada = JOptionPane.showInputDialog("Digite um número inteiro:");
+            if (entrada == null) return;   // usuário cancelou
+
+            no novo = new no();
+            novo.inteiro = Integer.parseInt(entrada);
+
+            if (ini == null) {            // lista vazia
+                ini = novo;
+                fim = novo;
+                novo.prox = ini;          // aponta para si mesmo
+            } else {
+                fim.prox = novo;          // antigo fim aponta para o novo
+                fim = novo;               // atualiza fim
+                fim.prox = ini;           // novo fim aponta para o início
+            }
+
+            JOptionPane.showMessageDialog(null, "Elemento " + novo.inteiro + " inserido com sucesso!");
+        }
+
+        // ── Remover por valor ─────────────────────────────────────────────────
+        public void pop() {
+            if (ini == null) {
+                JOptionPane.showMessageDialog(null, "Lista vazia!");
+                return;
+            }
+
+            String entrada = JOptionPane.showInputDialog("Digite o valor a remover:");
+            if (entrada == null) return;
+
+            int valor = Integer.parseInt(entrada);
+
+            // Caso especial: apenas um elemento
+            if (ini == fim) {
+                if (ini.inteiro == valor) {
+                    ini = null;
+                    fim = null;
+                    JOptionPane.showMessageDialog(null, "Elemento " + valor + " removido!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Elemento não encontrado!");
+                }
+                return;
+            }
+
+            // Procura o elemento e o anterior
+            no anterior = fim;        // anterior começa no fim (lista circular)
+            no atual = ini;
+
+            do {
+                if (atual.inteiro == valor) {
+                    if (atual == ini) {
+                        ini = ini.prox;
+                        fim.prox = ini;
+                    } else if (atual == fim) {
+                        anterior.prox = ini;
+                        fim = anterior;
+                    } else {
+                        anterior.prox = atual.prox;
+                    }
+                    JOptionPane.showMessageDialog(null, "Elemento " + valor + " removido!");
+                    return;
+                }
+                anterior = atual;
+                atual = atual.prox;
+            } while (atual != ini);
+
+            JOptionPane.showMessageDialog(null, "Elemento não encontrado!");
+        }
+
+        // ── Exibir todos ──────────────────────────────────────────────────────
+        public void print_all() {
+            if (ini == null) {
+                JOptionPane.showMessageDialog(null, "Lista vazia!");
+                return;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Lista (").append(qtdeElementos()).append(" elemento(s)):\n\n");
+
+            no temp = ini;
+            int pos = 1;
+            do {
+                sb.append("[").append(pos++).append("] ").append(temp.inteiro).append("\n");
+                temp = temp.prox;
+            } while (temp != ini);
+
+            JOptionPane.showMessageDialog(null, sb.toString());
+        }
+
+        // ── Remover todos ─────────────────────────────────────────────────────
+        public void pop_all() {
+            if (ini == null) {
+                JOptionPane.showMessageDialog(null, "Lista já está vazia!");
+                return;
+            }
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    null,
+                    "Deseja realmente remover todos os " + qtdeElementos() + " elemento(s)?",
+                    "Confirmar",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                ini = null;
+                fim = null;
+                JOptionPane.showMessageDialog(null, "Todos os elementos foram removidos!");
+            }
+        }
+    }
+
+    // ─── Menu ─────────────────────────────────────────────────────────────────
+    public static int menu() {
+        int op;
+        do {
+            String str  = "Menu de opções\n";
+                   str += "1- Adicionar item\n";
+                   str += "2- Remover item\n";
+                   str += "3- Consultar a lista\n";
+                   str += "4- Remover todos os itens\n";
+                   str += "5- Sair\n\n";
+                   str += "Opção:";
+
+            String entrada = JOptionPane.showInputDialog(str);
+            if (entrada == null) { op = 5; break; }   // fechar janela = sair
+            op = Integer.parseInt(entrada);
+        } while (op < 1 || op > 5);
+        return op;
+    }
+
+    // ─── Main ─────────────────────────────────────────────────────────────────
+    public static void main(String[] args) {
+        // Classes internas precisam de uma instância da classe externa
+        Lista_simples_circular_nao_ordenada app = new Lista_simples_circular_nao_ordenada();
+        lista l = app.new lista();
+        int op;
+
+        do {
+            op = menu();
+            switch (op) {
+                case 1: l.push();     break;
+                case 2: l.pop();      break;
+                case 3: l.print_all();break;
+                case 4: l.pop_all();  break;
+            }
+        } while (op != 5);
+
+        JOptionPane.showMessageDialog(null, "Programa encerrado. Até logo!");
+    }
+}
