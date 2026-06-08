@@ -1,0 +1,289 @@
+import java.util.Scanner;
+
+class No {
+    int valor;
+    No proximo;
+
+    public No(int valor) {
+        this.valor = valor;
+        this.proximo = null;
+    }
+}
+
+class ListaCircular {
+    private No inicio;
+    private No fim;
+    private int tamanho;
+
+    public ListaCircular() {
+        this.inicio = null;
+        this.fim = null;
+        this.tamanho = 0;
+    }
+
+    public boolean estaVazia() {
+        return inicio == null;
+    }
+
+    // a) Inserir na Lista
+    public void inserir(int valor) {
+        No novo = new No(valor);
+        if (estaVazia()) {
+            inicio = novo;
+            fim = novo;
+            fim.proximo = inicio;
+        } else {
+            fim.proximo = novo;
+            fim = novo;
+            fim.proximo = inicio;
+        }
+        tamanho++;
+        System.out.println("Valor " + valor + " inserido com sucesso.");
+    }
+
+    // b) Consultar na Lista
+    public void consultar(int valor) {
+        if (estaVazia()) {
+            System.out.println("A lista está vazia.");
+            return;
+        }
+        No atual = inicio;
+        int posicao = 0;
+        boolean encontrado = false;
+        do {
+            if (atual.valor == valor) {
+                System.out.println("Valor " + valor + " encontrado na posição: " + posicao);
+                encontrado = true;
+                break;
+            }
+            atual = atual.proximo;
+            posicao++;
+        } while (atual != inicio);
+
+        if (!encontrado) {
+            System.out.println("Mensagem: O valor " + valor + " não existe na lista.");
+        }
+    }
+
+    // c) Listar ordenadamente (sem usar vetores ou funções prontas)
+    public void listarOrdenado() {
+        if (estaVazia()) {
+            System.out.println("A lista está vazia.");
+            return;
+        }
+
+        // Para não alterar a lista original, vamos criar uma cópia temporária para ordenar ou apenas exibir
+        // Mas o requisito pede para listar do menor para o maior e vice-versa.
+        // Vou implementar um Bubble Sort manual na própria estrutura da lista (trocando valores) para facilitar a exibição.
+        
+        ordenarCrescente();
+        System.out.print("Menor para o Maior: ");
+        exibir();
+
+        ordenarDecrescente();
+        System.out.print("Maior para o Menor: ");
+        exibir();
+    }
+
+    private void ordenarCrescente() {
+        if (tamanho < 2) return;
+        for (int i = 0; i < tamanho; i++) {
+            No atual = inicio;
+            No proximo = inicio.proximo;
+            for (int j = 0; j < tamanho - 1; j++) {
+                if (atual.valor > proximo.valor) {
+                    int temp = atual.valor;
+                    atual.valor = proximo.valor;
+                    proximo.valor = temp;
+                }
+                atual = proximo;
+                proximo = proximo.proximo;
+            }
+        }
+    }
+
+    private void ordenarDecrescente() {
+        if (tamanho < 2) return;
+        for (int i = 0; i < tamanho; i++) {
+            No atual = inicio;
+            No proximo = inicio.proximo;
+            for (int j = 0; j < tamanho - 1; j++) {
+                if (atual.valor < proximo.valor) {
+                    int temp = atual.valor;
+                    atual.valor = proximo.valor;
+                    proximo.valor = temp;
+                }
+                atual = proximo;
+                proximo = proximo.proximo;
+            }
+        }
+    }
+
+    public void exibir() {
+        if (estaVazia()) {
+            System.out.println("Lista vazia.");
+            return;
+        }
+        No atual = inicio;
+        do {
+            System.out.print(atual.valor + " ");
+            atual = atual.proximo;
+        } while (atual != inicio);
+        System.out.println();
+    }
+
+    // d) Excluir elementos (Exclusão tripla)
+    public void exclusaoTripla(int v1, int v2, int v3) {
+        boolean e1 = excluir(v1);
+        boolean e2 = excluir(v2);
+        boolean e3 = excluir(v3);
+
+        if (!e1) System.out.println("Mensagem: O valor " + v1 + " não existe na lista.");
+        if (!e2) System.out.println("Mensagem: O valor " + v2 + " não existe na lista.");
+        if (!e3) System.out.println("Mensagem: O valor " + v3 + " não existe na lista.");
+    }
+
+    public boolean excluir(int valor) {
+        if (estaVazia()) return false;
+
+        No atual = inicio;
+        No anterior = fim;
+        boolean encontrado = false;
+
+        do {
+            if (atual.valor == valor) {
+                encontrado = true;
+                if (tamanho == 1) {
+                    inicio = null;
+                    fim = null;
+                } else {
+                    anterior.proximo = atual.proximo;
+                    if (atual == inicio) {
+                        inicio = atual.proximo;
+                    }
+                    if (atual == fim) {
+                        fim = anterior;
+                    }
+                }
+                tamanho--;
+                return true;
+            }
+            anterior = atual;
+            atual = atual.proximo;
+        } while (atual != inicio);
+
+        return false;
+    }
+
+    // e) Excluir todos os elementos
+    public void excluirTudo() {
+        inicio = null;
+        fim = null;
+        tamanho = 0;
+        System.out.println("Todos os elementos foram excluídos.");
+    }
+
+    // f) Criar lista SIMPLES e ORDENADA a partir da circular
+    public void criarListaSimplesOrdenada() {
+        if (estaVazia()) {
+            System.out.println("A lista circular está vazia. Nada para copiar.");
+            return;
+        }
+
+        // Classe interna para Lista Simples
+        class NoSimples {
+            int valor;
+            NoSimples proximo;
+            NoSimples(int v) { valor = v; }
+        }
+
+        NoSimples inicioSimples = null;
+
+        // Percorrer a circular e inserir na simples de forma ordenada
+        No atualCircular = inicio;
+        do {
+            NoSimples novo = new NoSimples(atualCircular.valor);
+            if (inicioSimples == null || novo.valor < inicioSimples.valor) {
+                novo.proximo = inicioSimples;
+                inicioSimples = novo;
+            } else {
+                NoSimples aux = inicioSimples;
+                while (aux.proximo != null && aux.proximo.valor < novo.valor) {
+                    aux = aux.proximo;
+                }
+                novo.proximo = aux.proximo;
+                aux.proximo = novo;
+            }
+            atualCircular = atualCircular.proximo;
+        } while (atualCircular != inicio);
+
+        // Mostrar elementos da lista simples
+        System.out.print("Elementos na Lista Simples Ordenada: ");
+        NoSimples aux = inicioSimples;
+        while (aux != null) {
+            System.out.print(aux.valor + " ");
+            aux = aux.proximo;
+        }
+        System.out.println();
+    }
+}
+
+public class Principal {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ListaCircular lista = new ListaCircular();
+        int opcao = 0;
+
+        do {
+            System.out.println("\n--- MENU PRINCIPAL ---");
+            System.out.println("a) Inserir na Lista");
+            System.out.println("b) Consultar na Lista");
+            System.out.println("c) Listar todos (Ordenado)");
+            System.out.println("d) Excluir 3 elementos");
+            System.out.println("e) Excluir todos");
+            System.out.println("f) Criar Lista Simples Ordenada");
+            System.out.println("g) Sair");
+            System.out.print("Escolha uma opção: ");
+            
+            String entrada = scanner.next().toLowerCase();
+            char op = entrada.charAt(0);
+
+            switch (op) {
+                case 'a':
+                    System.out.print("Digite o valor para inserir: ");
+                    lista.inserir(scanner.nextInt());
+                    break;
+                case 'b':
+                    System.out.print("Digite o valor para consultar: ");
+                    lista.consultar(scanner.nextInt());
+                    break;
+                case 'c':
+                    lista.listarOrdenado();
+                    break;
+                case 'd':
+                    System.out.print("Digite o 1º valor: ");
+                    int v1 = scanner.nextInt();
+                    System.out.print("Digite o 2º valor: ");
+                    int v2 = scanner.nextInt();
+                    System.out.print("Digite o 3º valor: ");
+                    int v3 = scanner.nextInt();
+                    lista.exclusaoTripla(v1, v2, v3);
+                    break;
+                case 'e':
+                    lista.excluirTudo();
+                    break;
+                case 'f':
+                    lista.criarListaSimplesOrdenada();
+                    break;
+                case 'g':
+                    System.out.println("Saindo...");
+                    opcao = -1;
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } while (opcao != -1);
+        
+        scanner.close();
+    }
+}
